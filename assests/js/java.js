@@ -49,6 +49,7 @@ var createTaskEl = function (taskDataObj) {
   taskInfoEl.className = "task-info";
   taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>";
   listItemEl.appendChild(taskInfoEl);
+  saveTasks();
 
   // create task actions (buttons and select) for task
   var taskActionsEl = createTaskActions(taskIdCounter);
@@ -116,6 +117,9 @@ var completeEditTask = function (taskName, taskType, taskId) {
       tasks[i].name = taskName;
       tasks[i].type = taskType;
     }
+
+    saveTasks();
+
   };
 
   alert("Task Updated!");
@@ -167,6 +171,8 @@ var taskStatusChangeHandler = function (event) {
     }
   }
 
+  saveTasks();
+
 };
 
 var editTask = function (taskId) {
@@ -201,17 +207,18 @@ var deleteTask = function (taskId) {
 
   var updatedTaskArr = [];
 
-// loop through current tasks
-for (var i = 0; i < tasks.length; i++) {
-  // if tasks[i].id doesn't match the value of taskId, let's keep that task and push it into the new array
-  if (tasks[i].id !== parseInt(taskId)) {
-    updatedTaskArr.push(tasks[i]);
+  // loop through current tasks
+  for (var i = 0; i < tasks.length; i++) {
+    // if tasks[i].id doesn't match the value of taskId, let's keep that task and push it into the new array
+    if (tasks[i].id !== parseInt(taskId)) {
+      updatedTaskArr.push(tasks[i]);
+    }
   }
-}
 
-// reassign tasks array to be the same as updatedTaskArr
-tasks = updatedTaskArr;
+  // reassign tasks array to be the same as updatedTaskArr
+  tasks = updatedTaskArr;
 
+  saveTasks();
 };
 
 var dragTaskHandler = function (event) {
@@ -255,6 +262,8 @@ var dropTaskHandler = function (event) {
     }
   }
 
+  saveTasks();
+
 };
 
 var dragLeaveHandler = function (event) {
@@ -262,6 +271,11 @@ var dragLeaveHandler = function (event) {
   if (taskListEl) {
     taskListEl.removeAttribute("style");
   }
+}
+
+var saveTasks = function () {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+
 }
 
 
